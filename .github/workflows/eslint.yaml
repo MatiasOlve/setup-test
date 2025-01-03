@@ -1,0 +1,23 @@
+name: ESLint
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint-client:
+    name: 🔦 Linting & Building - Client Apps
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.2
+      - name: Install modules
+        run: yarn
+      - name: Run lint
+        run: yarn run lint
+      - name: Build App
+        run: yarn build

@@ -1,0 +1,14 @@
+import environ
+
+env = environ.Env()
+environ.Env.read_env()
+
+THROTTLE_RATES_ANON = env.str("THROTTLE_RATES_ANON", "5000/hour")
+THROTTLE_RATES_USER = env.str("THROTTLE_RATES_USER", "5000/hour")
+THROTTLE_NUM_PROXIES = env.int("THROTTLE_NUM_PROXIES", 0)
+
+REST_FRAMEWORK = {
+    "DEFAULT_THROTTLE_CLASSES": [],
+    "DEFAULT_THROTTLE_RATES": {},
+    "NUM_PROXIES": THROTTLE_NUM_PROXIES,
+}
