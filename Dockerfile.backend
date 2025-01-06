@@ -1,18 +1,23 @@
-# Use the official Python image as a base
+# Backend Dockerfile
 FROM python:3.12-slim
 
-# Set working directory
+# Set the working directory
 WORKDIR /app
 
-# Install dependencies
-COPY backend/requirements.txt /app/
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy the backend folder and requirements
+COPY backend/ /app/backend/
+COPY requirements.txt /app/
+COPY manage.py /app/
 
-# Copy the project files
-COPY backend/ /app/
+# Install system dependencies (if needed, like for PostgreSQL)
+RUN apt-get update && apt-get install -y gcc libpq-dev
 
-# Expose the port for Django development server
-EXPOSE 8000
+# Install Python dependencies
+RUN pip install -r requirements.txt
 
-# Run the Django development server
+# Set environment variables
+ENV DJANGO_SETTINGS_MODULE=backend.settings
+ENV PYTHONUNBUFFERED=1
+
+# Run Django server
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
