@@ -5,7 +5,7 @@ After installing docker, open this project in a new terminal and run:
 
 docker compose up --build   
 
-This will build and start a frontend app on port 3000 and a backend app on port 8000.
+This will build and start a frontend app on port 80 and a backend app on port 8000.
 
 To delete the containers run:
 
