@@ -23,6 +23,7 @@ pylint==3.3.3
 pylint-django==2.6.1
 pylint-plugin-utils==0.8.2
 sqlparse==0.5.3
+tinkun_utils_app==2.6.0
 tomlkit==0.13.2
 typing_extensions==4.12.2
 whitenoise==6.8.2

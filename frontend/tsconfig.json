@@ -31,6 +31,6 @@
     ".next/types/**/*.ts",
     "src",
     ".next/static/types/**/*.ts"
-  ],
+, "next.config.mjs"  ],
   "exclude": ["node_modules"]
 }

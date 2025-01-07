@@ -1,3 +1,26 @@
+# Backend
+*.log
+*.bak
+*.tmp
+
+venv/
+backend/settings/.env
+backend/settings/.env.sample
+
+__pycache__/
+*.py[cod]
+*.sqlite3
+
+.pylintrc
+.coveragerc
+
+static/
+media/
+
+backend/Dockerfile
+backend/Procfile
+
+# Frontend
 Dockerfile
 .dockerignore
 node_modules
@@ -5,3 +28,9 @@ npm-debug.log
 README.md
 .next
 .git
+.env
+.env.sample
+
+# Global
+bearer.ignore
+.github

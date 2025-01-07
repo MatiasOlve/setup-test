@@ -2,19 +2,40 @@ services:
   backend:
     build:
       context: .
-      dockerfile: Dockerfile.backend
-    volumes:
-      - ./backend:/app/backend
+      dockerfile: backend/Dockerfile
+      args:
+        AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+        AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+        AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
+        FORMAT_OUTPUT: ${FORMAT_OUTPUT}
+    env_file:
+      - ./backend/settings/.env
+    image: ${PROJECT_NAME_BACKEND}:${TAG}
+    container_name: ${PROJECT_NAME_BACKEND}
     ports:
-      - "8000:8000"
-    environment:
-      - DEBUG=True
+      - '8000:8000'
 
   frontend:
     build:
       context: .
-      dockerfile: Dockerfile.frontend
-    volumes:
-      - ./frontend:/app
+      dockerfile: frontend/Dockerfile
+      args:
+        NEXT_PUBLIC_TESTING: ${NEXT_PUBLIC_TESTING}
+        NEXT_PUBLIC_START_DATE: ${NEXT_PUBLIC_START_DATE}
+        NEXT_PUBLIC_API_ENDPOINTS_BASE_URL: ${NEXT_PUBLIC_API_ENDPOINTS_BASE_URL}
+        NEXT_PUBLIC_FRONTEND_BASE_URL: ${NEXT_PUBLIC_FRONTEND_BASE_URL}
+        NEXT_PUBLIC_USERNAME: ${NEXT_PUBLIC_USERNAME}
+        NEXT_PUBLIC_PASSWORD: ${NEXT_PUBLIC_PASSWORD}
+        NEXT_PUBLIC_PROTECTED: ${NEXT_PUBLIC_PROTECTED}
+        NEXT_PUBLIC_TIME_ZONE: ${NEXT_PUBLIC_TIME_ZONE}
+    env_file:
+      - ./frontend/.env
+    environment:
+      TINKUN_SECRET_KEY: ${TINKUN_SECRET_KEY}
+      SECRET_KEY: ${SECRET_KEY}
+    image: ${PROJECT_NAME_FRONTEND}:${TAG}
+    container_name: ${PROJECT_NAME_FRONTEND}
     ports:
-      - "3000:3000"
+      - '80:80'
+    depends_on:
+      - backend
