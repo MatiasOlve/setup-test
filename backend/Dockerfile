@@ -1,5 +1,5 @@
 # Backend Dockerfile
-FROM python:3.12-slim
+FROM python:alpine
 
 # Set the working directory
 WORKDIR /app
@@ -9,18 +9,17 @@ COPY backend/ /app/backend/
 COPY requirements.txt /app/
 COPY manage.py /app/
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
+# Install system dependencies using apk
+RUN apk update && apk add --no-cache \
     curl \
-    awscli && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+    aws-cli
 
 RUN --mount=type=secret,id=aws_secrets \
     sh -c 'export $(cat /run/secrets/aws_secrets | xargs) && \
-           aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID && \
-           aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY && \
-           aws configure set default.region $AWS_DEFAULT_REGION && \
-           aws configure set default.output $FORMAT_OUTPUT'
+    aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID && \
+    aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY && \
+    aws configure set default.region $AWS_DEFAULT_REGION && \
+    aws configure set default.output $FORMAT_OUTPUT'
 
 RUN aws codeartifact login \
     --tool pip \
@@ -31,9 +30,6 @@ RUN aws codeartifact login \
     pip config set global.extra-index-url https://pypi.org/simple && \
     pip config set global.trusted-host pypi.org && \
     pip install --no-cache-dir -r requirements.txt
-
-# Install Python dependencies
-RUN pip install -r requirements.txt
 
 # Set environment variables
 ENV DJANGO_SETTINGS_MODULE=backend.settings
