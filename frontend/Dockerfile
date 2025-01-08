@@ -28,31 +28,14 @@ COPY frontend/next.config.mjs ./
 COPY frontend/tsconfig.json ./
 COPY frontend/package.json frontend/yarn.lock* frontend/package-lock.json* frontend/pnpm-lock.yaml* frontend/.npmrc* ./
 
-ARG NEXT_PUBLIC_TESTING
-ARG NEXT_PUBLIC_START_DATE
-ARG NEXT_PUBLIC_API_ENDPOINTS_BASE_URL
-ARG NEXT_PUBLIC_FRONTEND_BASE_URL
-ARG NEXT_PUBLIC_USERNAME
-ARG NEXT_PUBLIC_PASSWORD
-ARG NEXT_PUBLIC_PROTECTED
-ARG NEXT_PUBLIC_TIME_ZONE
-
-ENV NEXT_PUBLIC_TESTING=$NEXT_PUBLIC_TESTING
-ENV NEXT_PUBLIC_START_DATE=$NEXT_PUBLIC_START_DATE
-ENV NEXT_PUBLIC_API_ENDPOINTS_BASE_URL=$NEXT_PUBLIC_API_ENDPOINTS_BASE_URL
-ENV NEXT_PUBLIC_FRONTEND_BASE_URL=$NEXT_PUBLIC_FRONTEND_BASE_URL
-ENV NEXT_PUBLIC_USERNAME=$NEXT_PUBLIC_USERNAME
-ENV NEXT_PUBLIC_PASSWORD=$NEXT_PUBLIC_PASSWORD
-ENV NEXT_PUBLIC_PROTECTED=$NEXT_PUBLIC_PROTECTED
-ENV NEXT_PUBLIC_TIME_ZONE=$NEXT_PUBLIC_TIME_ZONE
-
-
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN \
+# Read .env file and extract NEXT_PUBLIC_ variables dynamically
+COPY frontend/.env .env
+RUN export $(grep '^NEXT_PUBLIC_' .env | xargs) && \
   if [ -f yarn.lock ]; then yarn run build; \
   elif [ -f package-lock.json ]; then npm run build; \
   elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build; \

@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-const USERNAME = process.env.NEXT_PUBLIC_USERNAME
-const PASSWORD = process.env.NEXT_PUBLIC_PASSWORD
-const IS_PROTECTED = process.env.NEXT_PUBLIC_PROTECTED === 'true'
+const USERNAME = process.env.USERNAME
+const PASSWORD = process.env.PASSWORD
+const IS_PROTECTED = process.env.PROTECTED === 'true'
 
 // Define a type for the session data
 interface SessionDataInterface {
