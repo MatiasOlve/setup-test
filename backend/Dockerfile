@@ -15,16 +15,12 @@ RUN apt-get update && apt-get install -y \
     awscli && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Add AWS config
-ARG AWS_ACCESS_KEY_ID
-ARG AWS_SECRET_ACCESS_KEY
-ARG AWS_DEFAULT_REGION
-ARG FORMAT_OUTPUT
-
-RUN aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID && \
-    aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY && \
-    aws configure set default.region $AWS_DEFAULT_REGION && \
-    aws configure set default.output $FORMAT_OUTPUT
+RUN --mount=type=secret,id=aws_secrets \
+    sh -c 'export $(cat /run/secrets/aws_secrets | xargs) && \
+           aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID && \
+           aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY && \
+           aws configure set default.region $AWS_DEFAULT_REGION && \
+           aws configure set default.output $FORMAT_OUTPUT'
 
 RUN aws codeartifact login \
     --tool pip \
